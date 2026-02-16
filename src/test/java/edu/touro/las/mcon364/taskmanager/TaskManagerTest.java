@@ -50,7 +50,7 @@ class TaskManagerTest {
 
         manager.run(command);
 
-        assertEquals(Priority.HIGH, registry.get("Update me").getPriority(),
+        assertEquals(Priority.HIGH, registry.get("Update me").get().priority(),
                 "Task priority should be updated");
     }
 
@@ -64,7 +64,7 @@ class TaskManagerTest {
 
         assertNull(registry.get("Task 1"), "Task 1 should be removed");
         assertNotNull(registry.get("Task 2"), "Task 2 should still exist");
-        assertEquals(Priority.MEDIUM, registry.get("Task 2").getPriority(),
+        assertEquals(Priority.MEDIUM, registry.get("Task 2").get().priority(),
                 "Task 2 priority should be updated");
     }
 

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -39,7 +41,7 @@ class CommandTest {
         new AddTaskCommand(registry, originalTask).execute();
         new AddTaskCommand(registry, replacementTask).execute();
 
-        assertEquals(Priority.HIGH, registry.get("Task").getPriority(),
+        assertEquals(Priority.HIGH, registry.get("Task").priority(),
                 "Replacement task should have new priority");
     }
 
@@ -71,9 +73,9 @@ class CommandTest {
         Command command = new UpdateTaskCommand(registry, "Update me", Priority.HIGH);
         command.execute();
 
-        Task updated = registry.get("Update me");
+        Optional<Task> updated = registry.get("Update me");
         assertNotNull(updated, "Task should still exist after update");
-        assertEquals(Priority.HIGH, updated.getPriority(), "Priority should be updated to HIGH");
+        assertEquals(Priority.HIGH, updated.get().priority(), "Priority should be updated to HIGH");
     }
 
     @Test
@@ -84,8 +86,8 @@ class CommandTest {
         Command command = new UpdateTaskCommand(registry, "Important task", Priority.LOW);
         command.execute();
 
-        Task updated = registry.get("Important task");
-        assertEquals("Important task", updated.getName(), "Task name should be preserved");
+        Optional<Task> updated = registry.get("Important task");
+        assertEquals("Important task", updated.get().name(), "Task name should be preserved");
     }
 
     @Test
@@ -109,7 +111,7 @@ class CommandTest {
 
         new UpdateTaskCommand(registry, "Flexible", Priority.LOW).execute();
 
-        assertEquals(Priority.LOW, registry.get("Flexible").getPriority(),
+        assertEquals(Priority.LOW, registry.get("Flexible").get(),
                 "Should allow decreasing priority");
     }
 
@@ -120,7 +122,7 @@ class CommandTest {
 
         new UpdateTaskCommand(registry, "Urgent", Priority.HIGH).execute();
 
-        assertEquals(Priority.HIGH, registry.get("Urgent").getPriority(),
+        assertEquals(Priority.HIGH, registry.get("Urgent").priority(),
                 "Should allow increasing priority");
     }
 }
