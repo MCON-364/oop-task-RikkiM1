@@ -1,5 +1,10 @@
 package edu.touro.las.mcon364.taskmanager;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 public class DemoMain {
     private final TaskRegistry registry;
     private final TaskManager manager;
@@ -40,9 +45,9 @@ public class DemoMain {
 
     private void demonstrateRetrievingTask() {
         System.out.println("\n2. Retrieving a specific task...");
-        Task retrieved = registry.get("Fix critical bug");
-        if (retrieved != null) {
-            System.out.println("   Found: " + retrieved.getName() + " (Priority: " + retrieved.getPriority() + ")");
+        Optional<Task> retrieved = registry.get("Fix critical bug");
+        if (retrieved.isPresent()) {
+            System.out.println("   Found: " + retrieved.get().name() + " (Priority: " + retrieved.get().priority() + ")");
         } else {
             System.out.println("   Task not found");
         }
@@ -70,8 +75,8 @@ public class DemoMain {
 
     private void demonstrateNullReturn() {
         System.out.println("\n6. Attempting to retrieve non-existent task...");
-        Task missing = registry.get("Non-existent task");
-        if (missing == null) {
+        Optional<Task> missing = registry.get("Non-existent task");
+        if (missing.isEmpty()) {
             System.out.println("   Returned null - this should be refactored to use Optional!");
         }
     }
@@ -90,7 +95,13 @@ public class DemoMain {
     private void displayAllTasks() {
         System.out.println("\n   Current tasks in registry:");
         registry.getAll().forEach((name, task) ->
-            System.out.println("     - " + name + " (Priority: " + task.getPriority() + ")")
+            System.out.println("     - " + name + " (Priority: " + task.priority() + ")")
         );
     }
+    private  Map<Priority, List<Task>> getTasksByPriority(){
+        System.out.println("\n   Tasked grouped by priority:");
+        return registry.getAll().values().stream()  // get all tasks as Collection<Task>
+                .collect(Collectors.groupingBy(Task::priority)); // group by priority
+    }
+
 }
