@@ -12,15 +12,13 @@ public final class UpdateTaskCommand implements Command {
         this.taskName = taskName;
         this.newPriority = newPriority;
     }
-@Override
-    public void execute() {
-        Task existing = registry.get(taskName)
-                .orElseThrow(() -> new TaskNotFoundException("Task '" + taskName + "' not found"));
+        @Override
+        public void execute() {
+            Task existing = registry.get(taskName)
+                    .orElseThrow(() -> new TaskNotFoundException(
+                            "Task '" + taskName + "' not found"));
 
-
-
-        // Create a new task with updated priority (tasks are immutable)
-        Task updated = new Task(existing.name(), newPriority);
-        registry.add(updated);  // This replaces the old task
-    }
+            Task updated = new Task(existing.name(), newPriority);
+            registry.add(updated);
+        }
 }

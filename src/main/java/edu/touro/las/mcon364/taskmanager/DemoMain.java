@@ -1,6 +1,9 @@
 package edu.touro.las.mcon364.taskmanager;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DemoMain {
     private final TaskRegistry registry;
@@ -95,4 +98,10 @@ public class DemoMain {
             System.out.println("     - " + name + " (Priority: " + task.priority() + ")")
         );
     }
+    private  Map<Priority, List<Task>> getTasksByPriority(){
+        System.out.println("\n   Tasked grouped by priority:");
+        return registry.getAll().values().stream()  // get all tasks as Collection<Task>
+                .collect(Collectors.groupingBy(Task::priority)); // group by priority
+    }
+
 }
